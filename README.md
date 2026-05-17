@@ -51,6 +51,9 @@ The system can be adapted to multiple environments because it focuses on general
 ## Tech Stack
 Frontend:
 - React
+- React Router
+- CSS3
+- React Icons
 
 Backend:
 - Node.js
@@ -73,4 +76,21 @@ resource-usage-heatmap
 5. Backend computes intensity metrics
 6. Backend returns structured dataset
 7. Frontend renders heatmap
+
+## Frontend Features
+- Interactive dashboard interface
+- Resource usage heatmap visualization
+- Analytics summary cards
+- Responsive design for desktop and mobile
+- Resource management page
+- Usage logging form
+- Professional UI with hover animations and gradients
+
+## Future Improvements
+- Real-time usage tracking
+- Authentication and role-based access
+- Export analytics reports
+- Advanced filtering and search
+- Live database integration with dynamic analytics
+
 
