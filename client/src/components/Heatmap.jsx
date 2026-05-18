@@ -1,11 +1,52 @@
-function Heatmap() {
-  const data = [
-    { resource: "Study Room A", values: [1, 3, 5, 2, 4] },
-    { resource: "Computer Lab", values: [2, 4, 3, 5, 3] },
-    { resource: "Projector", values: [0, 2, 3, 1, 4] },
-  ];
+import { useEffect, useState } from "react";
 
-  const times = ["9 AM", "10 AM", "11 AM", "12 PM", "1 PM"];
+function Heatmap() {
+  const [heatmap, setHeatmap] = useState({
+    times: [],
+    data: [],
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const fetchHeatmap = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const response = await fetch("/api/heatmap", {
+          signal: controller.signal,
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch heatmap data (${response.status})`);
+        }
+
+        const result = await response.json();
+
+        setHeatmap({
+          times: Array.isArray(result.times) ? result.times : [],
+          data: Array.isArray(result.data) ? result.data : [],
+        });
+      } catch (err) {
+        if (err.name !== "AbortError") {
+          setError(
+            err.message || "Something went wrong while loading heatmap data."
+          );
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchHeatmap();
+
+    return () => {
+      controller.abort();
+    };
+  }, []);
 
   const getColor = (value) => {
     if (value === 0) return "level-0";
@@ -14,6 +55,24 @@ function Heatmap() {
     return "level-3";
   };
 
+  if (loading) {
+    return (
+      <div className="heatmap-container">
+        <h2>Resource Usage Heatmap</h2>
+        <p>Loading heatmap data...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="heatmap-container">
+        <h2>Resource Usage Heatmap</h2>
+        <p>{error}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="heatmap-container">
       <h2>Resource Usage Heatmap</h2>
@@ -21,27 +80,25 @@ function Heatmap() {
       <div className="heatmap-grid">
         <div></div>
 
-        {times.map((time) => (
+        {heatmap.times.map((time) => (
           <div className="heatmap-label" key={time}>
             {time}
           </div>
         ))}
 
-        {data.map((row) => (
-          <>
-            <div className="resource-label" key={row.resource}>
-              {row.resource}
-            </div>
+        {heatmap.data.map((row) => (
+          <div key={row.resource} style={{ display: "contents" }}>
+            <div className="resource-label">{row.resource}</div>
 
             {row.values.map((value, index) => (
               <div
-                key={index}
+                key={`${row.resource}-${index}`}
                 className={`heatmap-cell ${getColor(value)}`}
               >
                 {value}
               </div>
             ))}
-          </>
+          </div>
         ))}
       </div>
 
