@@ -1,5 +1,4 @@
 -- SQL schema for Resource Usage Heatmap System
--- Designed for PostgreSQL, but compatible with other SQL databases.
 
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
