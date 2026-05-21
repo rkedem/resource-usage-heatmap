@@ -60,7 +60,7 @@ Backend:
 - Express
 
 Database:
-- MongoDB
+- PostgreSQL
 
 ## Project Structure
 resource-usage-heatmap
@@ -92,5 +92,13 @@ resource-usage-heatmap
 - Export analytics reports
 - Advanced filtering and search
 - Live database integration with dynamic analytics
+
+## Docker Support
+
+A Docker image for the backend server is available on Docker Hub:
+
+https://hub.docker.com/r/naamsewa2020/resource-usage-heatmap-backend
+
+This allows the backend service to be containerized and run consistently across environments.
 
 
